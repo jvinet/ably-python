@@ -94,7 +94,10 @@ class ConnectionManager(EventEmitter):
 
         if self.state == ConnectionState.CONNECTED:
             if self.transport:
-                await self.transport.send(protocol_message)
+                try:
+                    await self.transport.send(protocol_message)
+                except Exception as e:
+                    log.error(f"Failed to send to transport: {e}")
             else:
                 log.exception(
                     "ConnectionManager.send_protocol_message(): can not send message with no active transport"
