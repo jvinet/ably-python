@@ -543,7 +543,10 @@ class Channels(RestChannels):
             if channel.state == ChannelState.ATTACHING or channel.state == ChannelState.DETACHING:
                 channel._check_pending_state()
             elif channel.state == ChannelState.SUSPENDED:
-                asyncio.create_task(channel.attach())
+                try:
+                    asyncio.create_task(channel.attach())
+                except Exception as e:
+                    log.error("Failed to attach to channel %s", channel_name)
             elif channel.state == ChannelState.ATTACHED:
                 channel._request_state(ChannelState.ATTACHING)
 
