@@ -100,7 +100,8 @@ class RealtimeChannel(EventEmitter, Channel):
         state_change = await self.__internal_state_emitter.once_async()
 
         if state_change.current in (ChannelState.SUSPENDED, ChannelState.FAILED):
-            raise Exception(state_change.reason)
+            log.error(f"Failed to attach to channel {self.name}; reason={state_change.reason}")
+            #raise Exception(state_change.reason)
 
     def _attach_impl(self):
         log.debug("RealtimeChannel.attach_impl(): sending ATTACH protocol message")
